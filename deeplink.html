@@ -2,16 +2,41 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Open Deeplink</title>
+  <title>Show Request Headers</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 8px; margin-top: 20px; }
+  </style>
 </head>
-<body style="font-family:sans-serif;text-align:center;margin-top:50px;">
-  <button id="openApp" style="padding:12px 24px;font-size:16px;">Open My App</button>
+<body>
+  <h1>Request Header Viewer</h1>
+  <p>Click the button to send a test request and show the headers.</p>
+  <button id="showHeaders">Show Request Headers</button>
+  <pre id="output">Waiting for action...</pre>
 
   <script>
-    const deeplink = 'gojekdriver://webview?uri=https://google.com/&require_auth=true';
+    document.getElementById('showHeaders').addEventListener('click', async () => {
+      const output = document.getElementById('output');
+      output.textContent = 'Fetching...';
 
-    document.getElementById('openApp').addEventListener('click', () => {
-      window.location.href = deeplink;
+      // Define custom headers
+      const customHeaders = {
+        'X-Custom-Header': 'HelloWorld',
+        'Content-Type': 'application/json',
+      };
+
+      // Perform a request to a public echo service
+      const response = await fetch('https://httpbin.org/anything', {
+        method: 'GET',
+        headers: customHeaders,
+      });
+
+      // Parse the response JSON (httpbin returns headers it received)
+      const data = await response.json();
+
+      // Display the headers that httpbin saw
+      output.textContent = JSON.stringify(data.headers, null, 2);
     });
   </script>
 </body>
