@@ -157,7 +157,7 @@
       try {
         await fetch('https://httpbin.org/anything', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'x-app-paramter': 'this is parameter header' },
           body: JSON.stringify({ nominee: nominee.name }),
         });
 
